@@ -18,13 +18,12 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Install Android NDK
         run: |
-          sdkmanager --install "ndk;26.1.10909125"
-          echo "ndk.dir=$ANDROID_HOME/ndk/26.1.10909125" >> local.properties
+          SDKMGR=$(find "$ANDROID_HOME" -name sdkmanager -type f 2>/dev/null | head -1)
+          echo "sdkmanager: $SDKMGR"
+          yes | "$SDKMGR" --licenses > /dev/null 2>&1 || true
+          "$SDKMGR" --install "ndk;26.1.10909125"
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
